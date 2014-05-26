@@ -2,6 +2,19 @@
 
 import subprocess
 import re
+import smtplib
+from email.mime.text import MIMEText
+
+
+def send_mail(email, years):
+    msg = MIMEText("Your Server is %d years old" % years)
+    msg['Subject'] = "It's your servers birthday today"
+    msg['From'] = "ServerBirthday"
+    msg['To'] = email
+
+    s = smtplib.SMTP('localhost')
+    s.send_message(msg)
+    s.quit()
 
 def main():
     args = ("uptime")
@@ -14,9 +27,8 @@ def main():
     days = int(match.group(1))
 
     if (days % 365 == 0):
-        print ("Happy Birthday!")
-    else:
-        print ("Sorry, today is not your birthday")
+        years = int(days / 365)
+        send_mail("youare@awesome.com", years)
 
 if __name__ == "__main__":
     main()
